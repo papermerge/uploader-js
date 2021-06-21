@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block extra_js %}
+  <script type="module" src="static/js/features/01-uploader.js"></script>
+{% endblock %}
+
+{% block content %}
+    <main class="container py-3">
+        <h1>Upload Files</h1>
+        <p>
+          This feature demonstrates the use of uploader dialog
+        </p>
+        <div class="d-flex">
+            <button type="button" class="upload-trigger" class="btn btn-light m-2">Upload</button>
+            <input type="file" name="file_name" class="upload-hidden-input" multiple="true" hidden="true"/>
+        </div>
+        <div class="showroom container-fluid">
+            <div class="row"> <!-- row -->
+                <div class="col-12">
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}

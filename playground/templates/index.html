@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+  <main class="container py-3">
+    <p>
+        Document uploader is part of <a href="https://github.com/ciur/papermerge">Papermerge project</a> frontend. It takes care of document uploads.
+    </p>
+    <h1>Features Demo</h1>
+    <ul>
+        {% for feature in features %}
+            <li>
+                <a href="{{ feature.url }}">{{ feature.title }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+  </main>
+{% endblock %}

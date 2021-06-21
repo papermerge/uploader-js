@@ -1,0 +1,45 @@
+{
+  "name": "@papermerge/uploader",
+  "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/papermerge/uploader-js.git"
+  },
+  "description": "Uploader dialog for papermerge frontend",
+  "keywords": [
+    "papermerge",
+    "frontend",
+    "core",
+    "dms",
+    "document management system",
+    "pdf"
+  ],
+  "author": "Eugen Ciur <eugen@papermerge.com>",
+  "license": "Apache-2.0",
+  "main": "uploader/index.js",
+  "dependencies": {
+    "bootstrap": "^5.0.1",
+    "@popperjs/core": "^2.9.2",
+    "nunjucks": "^3.2.3"
+  },
+  "devDependencies": {
+    "@papermerge/symposium": "^0.3.0",
+    "@babel/core": "^7.13.14",
+    "@babel/preset-env": "^7.13.12",
+    "autoprefixer": "^9.8.6",
+    "babel-loader": "^8.2.2",
+    "bootstrap-select": "^1.13.18",
+    "css-loader": "^3.6.0",
+    "exports-loader": "^0.7.0",
+    "imagesloaded": "^4.1.4",
+    "jquery": "^3.6.0",
+    "node-sass": "^4.14.1",
+    "postcss-loader": "^3.0.0",
+    "sass-loader": "^8.0.2",
+    "style-loader": "^0.23.1",
+    "html-loader": "^2.1.2",
+    "webpack": "^5.39.1",
+    "webpack-cli": "^4.6.0",
+    "webpack-jquery-ui": "^2.0.1"
+  }
+}
