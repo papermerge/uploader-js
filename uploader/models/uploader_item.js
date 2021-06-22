@@ -1,6 +1,7 @@
 import { Model } from "@papermerge/symposium";
 
 import { urlconf } from "../urls";
+import { settings } from "../conf";
 
 
 function _human_size(bytes_count) {
@@ -19,10 +20,19 @@ function _human_size(bytes_count) {
     return output;
 }
 
+function _is_error_status_code(status_code) {
+    let div;
+
+    div = parseInt(status_code / 100);
+
+    return div == 4 || div == 5;
+}
+
 
 class UploaderItem extends Model {
 
     constructor({file, lang, parent_id}) {
+        super();
 
         if (!parent_id) {
           parent_id = -1;
@@ -33,13 +43,9 @@ class UploaderItem extends Model {
         this.file = file;
         this.lang = lang;
         this.file_type = file.type;
-        this.progress = 0;
+        this._progress = 0;
         this.parent_id = parent_id;
-        this.status = UploaderItem.INIT
-
-        // once uploader item instance is created
-        // immediately start upload process.
-        this.send();
+        this._status = UploaderItem.INIT
     }
 
     is_success() {
@@ -58,10 +64,27 @@ class UploaderItem extends Model {
        return _human_size(this.size);
     }
 
-    set_progress(percent) {
+    get progress() {
+        return this._progress;
+    }
+
+    set progress(percent) {
         // percentage = (0..100), as integer
-        this.set('progress', percent);
-        this.trigger('change');
+        if (this._progress != percent) {
+            this._progress = percent;
+            this.trigger('change');
+        }
+    }
+
+    get status() {
+        return this._status;
+    }
+
+    set status(value) {
+        if (this._status != value) {
+            this._status = value;
+            this.trigger("change");
+        }
     }
 
     _build_form_data() {
@@ -77,7 +100,7 @@ class UploaderItem extends Model {
         return form_data;
     }
 
-    send() {
+    upload() {
         let xhr,
             percent,
             token = undefined,
@@ -87,7 +110,14 @@ class UploaderItem extends Model {
 
         xhr = new XMLHttpRequest();
         xhr.addEventListener('progress', function(e) {
-            let response = JSON.parse(e.currentTarget.response);
+            let response;
+
+            try {
+                JSON.parse(e.currentTarget.response);
+            } catch (error) {
+                that.status = UploaderItem.UPLOAD_ERROR;
+                return;
+            }
 
             if (e.currentTarget.status == 403) {
                 // this is reponse when e.g. maximum number of nodes is reached
@@ -95,29 +125,31 @@ class UploaderItem extends Model {
             } else if (e.lengthComputable) {
                 percent = Math.round((e.loaded * 100) / e.total);
                 // notify subscribers of "upload_progress" event
-               that.set_progress(percent);
+               that.progress = percent;
             }
         });
 
         function transferFailed(e) {
-            let response = JSON.parse(e.currentTarget.response);
+            let response;
 
-            console.log(`Transfer failed for ${that.get('title')}`);
+            try {
+                response = JSON.parse(e.currentTarget.response);
+            } catch (error) {
+                that.status = UploaderItem.UPLOAD_ERROR;
+            }
 
             that.status = UploaderItem.UPLOAD_ERROR;
         }
 
-        function transferComplete(e) {
-            let response = JSON.parse(e.currentTarget.response);
+        function transferComplete(event) {
+            let response;
 
-            console.log(`Complete? status = ${e.currentTarget.status}`);
-
-            if (e.currentTarget.status == 200) {
+            if (event.target.status == 200) {
                 that.status = UploaderItem.UPLOAD_SUCCESS;
-            } else if (e.currentTarget.status == 500) {
-                that.status = UploaderItem.UPLOAD_ERROR;
-            } else if ( e.currentTarget.status == 400 ) {
-                that.status = UploaderItem.UPLOAD_ERROR;
+                response = JSON.parse(event.target.response);
+            } else if (_is_error_status_code(event.target.status)) {
+                that.statusText = `Server Error: ${event.target.statusText}`;
+                that.status = UploaderItem.UPLOAD_ERROR;      
             }
         }
 
@@ -125,7 +157,7 @@ class UploaderItem extends Model {
         xhr.addEventListener("load", transferComplete);
 
         csrf_selector = settings.get('csrf-selector');
-        csrf_header = settgins.get('csrf-header');
+        csrf_header = settings.get('csrf-header');
 
         if (csrf_selector) {
             token = document.querySelector(csrf_selector);

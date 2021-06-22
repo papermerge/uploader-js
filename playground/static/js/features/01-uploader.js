@@ -12,4 +12,19 @@ window.addEventListener('DOMContentLoaded', () => {
         upload_hidden_input.click();
     });
 
+    upload_hidden_input.addEventListener('change', (event) => {
+        let data_transfer,
+            files,
+            uploader_view;
+
+        files = event.target.files;
+
+        uploader_view = new DU.UploaderView({
+            files: files,
+            lang: 'deu',
+            parent_id: -1,
+            options: {'el': document.querySelector('#uploader-view')}
+        });
+    });
+
 });

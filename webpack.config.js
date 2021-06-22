@@ -1,15 +1,26 @@
 const path = require('path');
-let mode = process.env.NODE_ENV == 'production' ? 'production' : 'development';
+
+let glob = require("glob");
+let entry_point = path.resolve(__dirname, 'uploader/index.js');
+let output_path = path.resolve(__dirname, 'dist');
 let output_filename = "uploader.bundle.js";
+let mode = process.env.NODE_ENV == 'production' ? 'production' : 'development';
+
+
+if ( process.env.TESTBUILD ) {
+  entry_point = glob.sync(__dirname + "/tests/**/test_*.js");
+  output_path = __dirname + "/test-dist/";
+  output_filename = "tests.bundle.js";
+}
 
 module.exports = {
     mode: mode,
     output: {
-        path: path.resolve(__dirname, 'dist'),
+        path: output_path,
         filename: output_filename,
         library: 'DocumentUploader',
     },
-    entry: path.resolve(__dirname, 'uploader/index.js'),
+    entry: entry_point,
     module:  {
         rules: [
             {

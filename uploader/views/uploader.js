@@ -17,9 +17,9 @@ class UploaderView extends View {
       );
     }
 
-    this.listenTo(this.uploader, 'change', this.render);
-    this.listenTo(this.uploader, 'change', this.refresh_node_list);
-    this.render();
+    this.listenTo(this.uploader_col, 'change', this.render);
+
+    this.uploader_col.forEach((item) => { item.upload(); });
   }
 
   get default_template_name() {

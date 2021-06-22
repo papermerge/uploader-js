@@ -6,8 +6,8 @@ class UploaderItems extends Collection {
     get progress() {
       let total_progress = 0;
 
-      this.each(function(it) {
-          total_progress += it.get('progress') ;
+      this.forEach(function(it) {
+          total_progress += it.progress ;
       });
 
       if (this.length > 0) {
@@ -23,7 +23,7 @@ class UploaderItems extends Collection {
            'error': 0,
         };
 
-        this.each(function(it) {
+        this.forEach(it => {
             if ( it.is_success() ) {
                 summary_status['success'] += 1;
             }
