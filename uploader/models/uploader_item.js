@@ -3,30 +3,13 @@ import { Model } from "@papermerge/symposium";
 import { urlconf } from "../urls";
 import { settings } from "../conf";
 
+import {
+    human_size as _human_size
+} from "../utils";
 
-function _human_size(bytes_count) {
-    let arr = ['B', 'KB', 'MB', 'GB', 'TB'],
-        output = "";
-
-    if (!bytes_count) {
-        console.log("Invalid bytes count provided");
-        return;
-    };
-
-    for (let x = bytes_count, mult = 0; x > 1; x = x/1024, mult++) {
-        output = x.toFixed(1) + " " + arr[mult];
-    };
-
-    return output;
-}
-
-function _is_error_status_code(status_code) {
-    let div;
-
-    div = parseInt(status_code / 100);
-
-    return div == 4 || div == 5;
-}
+import {
+    is_error_status_code as _is_error_status_code
+} from "../utils";
 
 
 class UploaderItem extends Model {
@@ -83,6 +66,11 @@ class UploaderItem extends Model {
     set status(value) {
         if (this._status != value) {
             this._status = value;
+            if (this._status == UploaderItem.UPLOAD_ERROR) {
+                // on error, progress is set automatically
+                // to 100% i.e. we are done with this item
+                this._progress = 100;
+            }
             this.trigger("change");
         }
     }
@@ -149,7 +137,7 @@ class UploaderItem extends Model {
                 response = JSON.parse(event.target.response);
             } else if (_is_error_status_code(event.target.status)) {
                 that.statusText = `Server Error: ${event.target.statusText}`;
-                that.status = UploaderItem.UPLOAD_ERROR;      
+                that.status = UploaderItem.UPLOAD_ERROR;
             }
         }
 

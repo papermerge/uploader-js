@@ -44,7 +44,9 @@ class UploaderView extends View {
   }
 
   toggle_details(event) {
-    this.$el.find('.uploader-details').toggleClass('hidden');
+    this.$el.find(
+      '.uploader-details-wrapper'
+    ).toggleClass('hidden');
   }
 
   close(event) {

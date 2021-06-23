@@ -31,6 +31,10 @@ def create_app(delay_seconds=0, no_cache=False):
         create_blueprint('01-uploader', request_delay=0.1),
         url_prefix='/01-uploader'
     )
+    app.register_blueprint(
+        create_blueprint('02-events', request_delay=0.1),
+        url_prefix='/02-events'
+    )
 
     @app.route('/')
     def index():

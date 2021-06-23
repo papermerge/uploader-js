@@ -41,4 +41,26 @@ describe("test/test_uploader_item.js", () => {
         );
     });
 
+    it("Sets progress = 100 on error status", () => {
+        let item = new UploaderItem({
+            file: new File([], 'whatever.pdf'),
+            lang: 'deu',
+            parent_id: -1
+        });
+
+        assert.equal(
+            item.progress,
+            0,
+            "Initial progress value must set to zero"
+        );
+
+        item.status = UploaderItem.UPLOAD_ERROR;
+
+        assert.equal(
+            item.progress,
+            100,
+            "On error the progress must be automatically set to 100"
+        );
+    });
+
 });

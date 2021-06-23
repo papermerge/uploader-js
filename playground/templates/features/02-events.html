@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block extra_js %}
+  <script type="module" src="static/js/features/02-events.js"></script>
+{% endblock %}
+
+{% block content %}
+    <main class="container py-3">
+        <h1>Notify Outer World when Upload is Complete</h1>
+        <p>
+          Uploader communicates with "external world" i.e. with other views via "upload-success", "upload-failed" events.
+          This feature demonstrates the effect of listening on "upload-success" event - DOM outside Uploader is updated based
+          on details provided by "upload-success" event. 
+        </p>
+        <div class="d-flex">
+            <button type="button" class="upload-trigger" class="btn btn-light m-2">Upload</button>
+            <input type="file" name="file_name" class="upload-hidden-input" multiple="true" hidden="true"/>
+        </div>
+        <div class="showroom container-fluid">
+            <div class="row"> <!-- row -->
+                <div class="col-12">
+                    <div id="uploader-view"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}

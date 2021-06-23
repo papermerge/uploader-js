@@ -13,6 +13,10 @@ global_context = {
             'url': '/01-uploader',
             'title': '01 - Uploader'
         },
+        {
+            'url': '/02-events',
+            'title': '02 - Events'
+        },
     ]
 }
 
@@ -53,9 +57,7 @@ def create_blueprint(name, request_delay=0):
 
     # Reusable app. It provides views for following URLS:
     #  - /
-    #  - /folder/
-    #  - /folder/<int:node_id>
-    #  - /document/<int:node_id>
+    #  - /upload/
     blueprint = Blueprint(
         name,  # unique name
         name,  # import_name
@@ -73,9 +75,12 @@ def create_blueprint(name, request_delay=0):
             **global_context
         )
 
-    @blueprint.route('/upload/')
+    @blueprint.route('/upload/', methods=['POST'])
     def upload():
         time.sleep(request_delay)
-        # content_type = request.headers.get('Content-Type')
+        return {
+            'doc_id': 1,
+            'title': 'some_title.pdf'
+        }
 
     return blueprint
