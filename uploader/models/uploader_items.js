@@ -44,6 +44,21 @@ class UploaderItems extends Collection {
         let summary_status = this.get_summary_status();
         return summary_status['error'] > 0;
     }
+
+    add(item_or_items) {
+        super.add(item_or_items);
+        if (item_or_items['on']) {
+            item_or_items.on(
+                "upload-success",
+                this._on_upload_success,
+                this
+            );
+        }
+    }
+
+    _on_upload_success(doc_dict) {
+        this.trigger("upload-success", doc_dict);
+    }
 }
 
 export { UploaderItems };

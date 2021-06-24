@@ -79,10 +79,10 @@ class UploaderItem extends Model {
         let form_data;
 
         form_data = new FormData();
-        form_data.append("language", this.lang);
+        form_data.append("lang", this.lang);
         form_data.append("file_name", this.file_name);
         form_data.append("file_type", this.file_type);
-        form_data.append("parent", this.parent_id);
+        form_data.append("parent_id", this.parent_id);
         form_data.append("file", this.file);
 
         return form_data;
@@ -135,6 +135,9 @@ class UploaderItem extends Model {
             if (event.target.status == 200) {
                 that.status = UploaderItem.UPLOAD_SUCCESS;
                 response = JSON.parse(event.target.response);
+                if (response['document']) {
+                    that.trigger("upload-success", response['document']);
+                }
             } else if (_is_error_status_code(event.target.status)) {
                 that.statusText = `Server Error: ${event.target.statusText}`;
                 that.status = UploaderItem.UPLOAD_ERROR;

@@ -1,5 +1,6 @@
 import os
 import time
+import random
 
 from flask import (
     Blueprint,
@@ -78,9 +79,16 @@ def create_blueprint(name, request_delay=0):
     @blueprint.route('/upload/', methods=['POST'])
     def upload():
         time.sleep(request_delay)
+        file = request.files['file']
+        parent_id = request.form['parent_id']
+        lang = request.form['lang']
         return {
-            'doc_id': 1,
-            'title': 'some_title.pdf'
+            'document': {
+                'id': random.randint(0, 1000),
+                'title': file.filename,
+                'parent_id': parent_id,
+                'lang': lang
+            }
         }
 
     return blueprint

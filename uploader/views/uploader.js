@@ -7,51 +7,56 @@ import { UploaderItem } from "../models/uploader_item";
 
 class UploaderView extends View {
 
-  constructor({files, lang, parent_id, options}) {
-    super(options);
-    this.uploader_col = new UploaderItems();
+    constructor({files, lang, parent_id, options}) {
+        super(options);
+        this.uploader_col = new UploaderItems();
 
-    for(let file of files) {
-      this.uploader_col.add(
-        new UploaderItem({file, lang, parent_id})
-      );
+        for(let file of files) {
+            this.uploader_col.add(
+                new UploaderItem({file, lang, parent_id})
+            );
+        }
+
+        this.listenTo(this.uploader_col, 'change', this.render);
+        this.listenTo(this.uploader_col, 'upload-success', this.on_upload_success);
+
+        this.uploader_col.forEach((item) => { item.upload(); });
     }
 
-    this.listenTo(this.uploader_col, 'change', this.render);
-
-    this.uploader_col.forEach((item) => { item.upload(); });
-  }
-
-  get default_template_name() {
-      return "templates/uploader.html";
-  }
-
-  get default_template_engine() {
-      return renderman;
-  }
-
-  get default_context() {
-      return {'items': this.uploader_col};
-  }
-
-  events() {
-    let event_map = {
-      'click .close': 'close',
-      'click button.toggle-details': 'toggle_details'
+    get default_template_name() {
+        return "templates/uploader.html";
     }
 
-    return event_map;
-  }
+    get default_template_engine() {
+        return renderman;
+    }
 
-  toggle_details(event) {
-    this.$el.find(
-      '.uploader-details-wrapper'
-    ).toggleClass('hidden');
-  }
+    get default_context() {
+        return {'items': this.uploader_col};
+    }
 
-  close(event) {
-    this.$el.html('');
-  }
+    events() {
+        let event_map = {
+            'click .close': 'close',
+            'click button.toggle-details': 'toggle_details'
+        }
+
+        return event_map;
+    }
+
+    toggle_details(event) {
+        this.$el.find(
+            '.uploader-details-wrapper'
+        ).toggleClass('hidden');
+    }
+
+    close(event) {
+        this.$el.html('');
+    }
+
+    on_upload_success(doc_dict) {
+        this.trigger("upload-success", doc_dict);
+    }
 }
 
 
