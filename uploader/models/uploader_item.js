@@ -161,7 +161,7 @@ class UploaderItem extends Model {
         if (csrf_header) {
             xhr.setRequestHeader(
                 csrf_header,
-                token
+                token.value
             );
         } else {
             console.warn("CSRF header configuration not found");
