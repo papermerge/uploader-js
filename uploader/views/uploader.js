@@ -7,20 +7,30 @@ import { UploaderItem } from "../models/uploader_item";
 
 class UploaderView extends View {
 
-    constructor({files, lang, parent_id, options}) {
+    constructor({lang, parent, options}) {
         super(options);
-        this.uploader_col = new UploaderItems();
+        let parent_id;
 
-        for(let file of files) {
-            this.uploader_col.add(
-                new UploaderItem({file, lang, parent_id})
-            );
-        }
+        this.lang = lang;
+        this.parent = parent;
+        this.uploader_col = new UploaderItems();
 
         this.listenTo(this.uploader_col, 'change', this.render);
         this.listenTo(this.uploader_col, 'upload-success', this.on_upload_success);
+    }
 
-        this.uploader_col.forEach((item) => { item.upload(); });
+    upload({files, lang, parent}) {
+        let parent_id, item;
+
+        if (parent) {
+            parent_id = parent.id;
+        }
+
+        for(let file of files) {
+            item =  new UploaderItem({file, lang, parent_id});
+            this.uploader_col.add(item);
+            item.upload();
+        }
     }
 
     get default_template_name() {
