@@ -5,12 +5,12 @@ class UrlConf {
      * Central point for managing urls.
      */
 
-    constructor(prefix="/browser") {
+    constructor(prefix="/core") {
         this._prefix = prefix;
     }
 
     upload_url() {
-        return `${this.prefix}/upload/`;
+        return `${this.prefix}/document/add/`;
     }
 
     root_url() {
