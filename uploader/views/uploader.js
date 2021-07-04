@@ -19,20 +19,6 @@ class UploaderView extends View {
         this.listenTo(this.uploader_col, 'upload-success', this.on_upload_success);
     }
 
-    upload({files, lang, parent}) {
-        let parent_id, item;
-
-        if (parent) {
-            parent_id = parent.id;
-        }
-
-        for(let file of files) {
-            item =  new UploaderItem({file, lang, parent_id});
-            this.uploader_col.add(item);
-            item.upload();
-        }
-    }
-
     get default_template_name() {
         return "templates/uploader.html";
     }
@@ -52,6 +38,20 @@ class UploaderView extends View {
         }
 
         return event_map;
+    }
+
+    upload({files, lang, parent}) {
+        let parent_id, item;
+
+        if (parent) {
+            parent_id = parent.id;
+        }
+
+        for(let file of files) {
+            item =  new UploaderItem({file, lang, parent_id});
+            this.uploader_col.add(item);
+            item.upload();
+        }
     }
 
     toggle_details(event) {
